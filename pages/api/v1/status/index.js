@@ -1,5 +1,4 @@
 import database from "infra/database.js";
-import { requestToBodyStream } from "next/dist/server/body-streams";
 
 async function status(request, response) {
   const updatedAt = new Date().toISOString();
