@@ -4,7 +4,7 @@ beforeAll(async () => {
   await orcherstrator.waitForAllServices();
 });
 
-describe("GET /api/v1/status ", () => {
+describe("GET /api/v1/status", () => {
   describe("Anonymous User", () => {
     test("Retriving current system statu", async () => {
       const response = await fetch("http://localhost:3000/api/v1/status");

@@ -1,4 +1,3 @@
-import database from "infra/database.js";
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
@@ -6,7 +5,7 @@ beforeAll(async () => {
   await orchestrator.clearDatabase();
 });
 
-describe("POST /api/v1/migrations ", () => {
+describe("POST /api/v1/migrations", () => {
   describe("Anonymous User", () => {
     describe("Running pending migrations", () => {
       test("For the first time", async () => {
