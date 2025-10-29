@@ -1,8 +1,8 @@
-import orcherstrator from "tests/orcherstrator";
+import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
-  await orcherstrator.waitForAllServices();
-  await orcherstrator.clearDatabase();
+  await orchestrator.waitForAllServices();
+  await orchestrator.clearDatabase();
 });
 
 describe("GET /api/v1/migrations ", () => {
