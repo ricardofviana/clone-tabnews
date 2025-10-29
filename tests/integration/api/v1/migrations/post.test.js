@@ -3,7 +3,7 @@ import orcherstrator from "tests/orcherstrator";
 
 beforeAll(async () => {
   await orcherstrator.waitForAllServices();
-  await database.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public");
+  await orcherstrator.clearDatabase();
 });
 
 describe("POST /api/v1/migrations ", () => {
