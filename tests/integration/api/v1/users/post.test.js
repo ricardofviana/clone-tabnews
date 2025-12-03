@@ -85,7 +85,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "Email ou nome de usuário já existe",
-        action: "Use outro email ou nome de usuário para finalizar o cadastro",
+        action: "Use outro email ou nome de usuário para esta operação.",
         status_code: 400,
       });
     });
@@ -121,7 +121,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "Email ou nome de usuário já existe",
-        action: "Use outro email ou nome de usuário para finalizar o cadastro",
+        action: "Use outro email ou nome de usuário para esta operação.",
         status_code: 400,
       });
     });
