@@ -31,11 +31,38 @@ async function findOneByUsername(username) {
   }
 }
 
+async function findOneByEmail(email) {
+  const userFound = await runSelectQuery(email);
+
+  return userFound;
+
+  async function runSelectQuery(email) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      where
+        LOWER(email) = LOWER($1)
+      LIMIT 
+        1
+      ;`,
+      values: [email],
+    });
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "O email informado não foi encontrado no sistema.",
+        action: "Verifique o email e tente novamente",
+      });
+    }
+    return results.rows[0];
+  }
+}
+
 async function create(userInputValues) {
-  await validateUniqueEmailOrUser(
-    userInputValues.email,
-    userInputValues.username,
-  );
+  await validateUniqueEmail(userInputValues.email);
+  await validateUniqueUsername(userInputValues.username);
   await hashPasswordInObject(userInputValues);
 
   const newUser = await runInsertQuery(userInputValues);
@@ -64,10 +91,12 @@ async function update(username, userInputValues) {
   const currentUser = await findOneByUsername(username);
 
   if ("username" in userInputValues || "email" in userInputValues) {
-    await validateUniqueEmailOrUser(
-      userInputValues.email,
-      userInputValues.username,
-    );
+    if ("email" in userInputValues) {
+      await validateUniqueEmail(userInputValues.email);
+    }
+    if ("username" in userInputValues) {
+      await validateUniqueUsername(userInputValues.username);
+    }
   }
 
   if ("password" in userInputValues) {
@@ -103,19 +132,37 @@ async function update(username, userInputValues) {
   }
 }
 
-async function validateUniqueEmailOrUser(email, username) {
+async function validateUniqueEmail(email) {
   const results = await database.query({
     text: `
-    SELECT 
-    email,
-    username
+    SELECT
+      email
     FROM
-    users
+      users
     where
-    LOWER(email) = LOWER($1)
-    OR LOWER(username) = LOWER($2)
+      LOWER(email) = LOWER($1)
     ;`,
-    values: [email, username],
+    values: [email],
+  });
+  if (results.rowCount > 0) {
+    throw new ValidationError({
+      message: "Email ou nome de usuário já existe",
+      action: "Use outro email ou nome de usuário para esta operação.",
+    });
+  }
+}
+
+async function validateUniqueUsername(username) {
+  const results = await database.query({
+    text: `
+    SELECT
+      username
+    FROM
+      users
+    where
+      LOWER(username) = LOWER($1)
+    ;`,
+    values: [username],
   });
   if (results.rowCount > 0) {
     throw new ValidationError({
@@ -133,6 +180,7 @@ async function hashPasswordInObject(userInputValues) {
 const user = {
   create,
   findOneByUsername,
+  findOneByEmail,
   update,
 };
 
