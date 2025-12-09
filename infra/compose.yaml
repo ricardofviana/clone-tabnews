@@ -8,3 +8,9 @@ services:
       POSTGRES_PASSWORD: "local_password123"
     ports:
       - "5432:5432"
+  mailcatcher:
+    container_name: "mailcatcher-dev"
+    image: "sj26/mailcatcher"
+    ports:
+      - "1025:1025"
+      - "1080:1080"
